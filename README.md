@@ -11,6 +11,7 @@ double addFunction(double number) {
     // function code
     return result;
 }
+'''
 2. Compile this file as a DLL using your development environment.
 3. Place the resulting DLL file in the plugins directory at the root of the project.
 4. Restart the calculator and your function will be available for use.

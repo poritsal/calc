@@ -19,5 +19,10 @@ add_library(functan SHARED ./plugins/functan.cpp "plugins/functan.cpp" "DllReade
 add_library(funcln SHARED ./plugins/funcln.cpp "plugins/funcln.cpp" "DllReader.cpp" "DllReader.h")
 add_library(funclog SHARED ./plugins/funclog.cpp "plugins/funclog.cpp" "DllReader.cpp" "DllReader.h")
 add_library(funcasin SHARED ./plugins/funcasin.cpp "plugins/funcasin.cpp" "DllReader.cpp" "DllReader.h")
+add_library(funcadd SHARED ./plugins/funcadd.cpp "plugins/funcadd.cpp" "DllReader.cpp" "DllReader.h")
+add_library(funcsub SHARED ./plugins/funcsub.cpp "plugins/funcsub.cpp" "DllReader.cpp" "DllReader.h")
+add_library(funcmult SHARED ./plugins/funcmult.cpp "plugins/funcmult.cpp" "DllReader.cpp" "DllReader.h")
+add_library(funcdiv SHARED ./plugins/funcdiv.cpp "plugins/funcdiv.cpp" "DllReader.cpp" "DllReader.h")
+add_library(funcdeg SHARED ./plugins/funcdeg.cpp "plugins/funcdeg.cpp" "DllReader.cpp" "DllReader.h")
 
-target_link_libraries(calc funcsin funccos functan funcln funclog funcasin)
+target_link_libraries(calc funcsin funccos functan funcln funclog funcasin funcadd funcsub funcmult funcdiv funcdeg)

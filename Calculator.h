@@ -15,16 +15,16 @@ private:
     std::stack<double> numbersStack;
     std::stack<std::string> operatorsStack;
     std::map<std::string, int> operatorPriorities;
-    std::map<std::string, std::function<double(double, double)>> operationFunctions;
+    std::map<std::string, std::string> operatorToName;
     DllReader reader;
 
     std::vector<std::string> standardizeExpression(const std::string& expression);
     bool isOperator(char c);
+    void executeBinaryOperator(const std::string& operatorName);
+    void executeUnaryFunction(const std::string& functionName);
     void performStep();
     bool isNumber(const std::string& str);
     bool isStandardFunction(const std::string& str);
-    void clearStack(std::stack<double>& stack);
-    void clearStack(std::stack<std::string>& stack);
 };
 
 #endif

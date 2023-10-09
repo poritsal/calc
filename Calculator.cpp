@@ -12,21 +12,13 @@ Calculator::Calculator(const std::string& dllFolderPath) : reader(dllFolderPath)
         {"^", 2}
     };
 
-    operationFunctions = {
-        {"+", [](double x, double y) -> double { return x + y; }},
-        {"-", [](double x, double y) -> double { return y - x; }},
-        {"*", [](double x, double y) -> double { return x * y; }},
-        {"/", [](double x, double y) -> double { return y / x; }},
-        {"^", [](double x, double y) -> double { return pow(y, x); }}
+    operatorToName = {
+    {"+", "add"},
+    {"-", "sub"},
+    {"*", "mult"},
+    {"/", "div"},
+    {"^", "deg"}
     };
-}
-
-void Calculator::clearStack(std::stack<std::string>& stack) {
-    stack = std::stack<std::string>();
-}
-
-void Calculator::clearStack(std::stack<double>& stack) {
-    stack = std::stack<double>();
 }
 
 bool Calculator::isOperator(char c) {
@@ -75,34 +67,62 @@ std::vector<std::string> Calculator::standardizeExpression(const std::string& ex
 
 }
 
-void Calculator::performStep() {
-    double firstOperand, secondOperand;
-    std::string currentOperator;
+void Calculator::executeBinaryOperator(const std::string& operatorName) {
+    double firstOperand = numbersStack.top();
+    numbersStack.pop();
+    double secondOperand = numbersStack.top();
+    numbersStack.pop();
 
-    currentOperator = operatorsStack.top();
-    operatorsStack.pop();
-
-    if (isStandardFunction(currentOperator)) {
-        firstOperand = numbersStack.top();
-        numbersStack.pop();
-
-        secondOperand = numbersStack.top();
-        numbersStack.pop();
-
-        double result = operationFunctions[currentOperator](firstOperand, secondOperand);
-        numbersStack.push(result);
-        return;
-    }
-
-    if (reader.isFunctionAvailable(currentOperator)) {
-        firstOperand = numbersStack.top();
-        numbersStack.pop();
-        double result = reader.executeFunction(currentOperator, firstOperand);
+    if (reader.isFunctionAvailable2Operators(operatorName)) {
+        double result = reader.executeFunction2Operators(operatorName, firstOperand, secondOperand);
         numbersStack.push(result);
     }
     else {
-        throw std::runtime_error("Invalid input: " + currentOperator);
+        throw std::runtime_error("Invalid input: " + operatorName);
     }
+}
+
+void Calculator::executeUnaryFunction(const std::string& functionName) {
+    if (reader.isFunctionAvailable(functionName)) {
+        double firstOperand = numbersStack.top();
+        numbersStack.pop();
+        double result = reader.executeFunction(functionName, firstOperand);
+        numbersStack.push(result);
+    }
+    else {
+        throw std::runtime_error("Invalid input: " + functionName);
+    }
+}
+
+void Calculator::performStep() {
+    std::string currentOperator = operatorsStack.top();
+    operatorsStack.pop();
+
+    if (isStandardFunction(currentOperator)) {
+        switch (currentOperator[0])
+        {
+        case '+':
+            executeBinaryOperator(operatorToName[currentOperator]);
+            return;
+        case '-':
+            executeBinaryOperator(operatorToName[currentOperator]);
+            return;
+        case '*':
+            executeBinaryOperator(operatorToName[currentOperator]);
+            return;
+        case '/':
+            executeBinaryOperator(operatorToName[currentOperator]);
+            return;
+        case '^':
+            executeBinaryOperator(operatorToName[currentOperator]);
+            return;
+        default:
+            throw std::runtime_error("Unexpected behavior");
+            return;
+        }
+    }
+
+    executeUnaryFunction(currentOperator);
 }
 
 bool Calculator::isNumber(const std::string& str) {
@@ -115,12 +135,12 @@ bool Calculator::isNumber(const std::string& str) {
 }
 
 bool Calculator::isStandardFunction(const std::string& str) {
-    return (operationFunctions.find(str) != operationFunctions.end());
+    return (operatorPriorities.find(str) != operatorPriorities.end());
 }
 
 double Calculator::calculateExpression(const std::string& expression) {
-    clearStack(numbersStack);
-    clearStack(operatorsStack);
+    numbersStack = std::stack<double>();
+    operatorsStack = std::stack<std::string>();
     std::vector<std::string> buffer = standardizeExpression(expression);
     for (size_t i = 0; i < buffer.size(); i++)
     {

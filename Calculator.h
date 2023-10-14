@@ -21,7 +21,7 @@ private:
     std::vector<std::string> standardizeExpression(const std::string& expression);
     bool isOperator(char c);
     void executeBinaryOperator(const std::string& operatorName);
-    void executeUnaryFunction(const std::string& functionName);
+    void executeUnaryFunction(std::string& functionName);
     void performStep();
     bool isNumber(const std::string& str);
     bool isStandardFunction(const std::string& str);

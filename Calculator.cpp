@@ -22,7 +22,7 @@ Calculator::Calculator(const std::string& dllFolderPath) : reader(dllFolderPath)
 }
 
 bool Calculator::isOperator(char c) {
-    return c == '+' || c == '-' || c == '*' || c == '/' || c == '^';
+    return c == '+' || c == '-' || c == '*' || c == '/' || c == '^' || c == '!';
 }
 
 std::vector<std::string> Calculator::standardizeExpression(const std::string& expression) {
@@ -82,7 +82,9 @@ void Calculator::executeBinaryOperator(const std::string& operatorName) {
     }
 }
 
-void Calculator::executeUnaryFunction(const std::string& functionName) {
+void Calculator::executeUnaryFunction(std::string& functionName) {
+    if (functionName == "!")
+        functionName = "fact";
     if (reader.isFunctionAvailable(functionName)) {
         double firstOperand = numbersStack.top();
         numbersStack.pop();
